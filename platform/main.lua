@@ -7,14 +7,20 @@ function love.load()
   sprites.player_jump = love.graphics.newImage('sprites/player_jump.png')
   sprites.player_stand = love.graphics.newImage('sprites/player_stand.png')
   require('player')
+  require('coin')
+  anim8 = require('anim8-master/anim8')
   platforms = {}
   spawnPlatform(50, 400, 300, 30)
+  spawnCoin(200,100)
 end
 
 function love.update(dt)
   myWorld:update(dt)
   playerUpdate(dt)
-end
+
+  for i,c in ipairs(coins) do
+    c.animation:update(dt)
+  end
 
 function love.draw()
   love.graphics.draw(player.sprite, player.body:getX(), player.body:getY(), nil, player.direction, 1, sprites.player_stand:getWidth()/2, sprites.player_stand:getHeight()/2)
@@ -23,6 +29,10 @@ function love.draw()
   end
 end
 
+for i,c in ipairs(coins) do
+  c.animation:draw(sprites.coin_sheet, c.x, c.y)
+  end
+end
 function love.keypressed(key, scancode, isrepeat)
   if key == "up" or key == "w" and player.grounded == true then
     player.body:applyLinearImpulse(0, -2500)
